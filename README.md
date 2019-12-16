@@ -10,6 +10,7 @@ The deep structure is a language linguists came up with which is basically boile
 Surface Structure: The weather being nice, we went for a picnic in the park.
 
 (N=we V=went <Prep=for Art=a N=picnic <Prep=in Art=the N=park>> (Art=the N=weather V=being Adj=nice))
+```
     /NP
          \N --- we
 \S
@@ -38,6 +39,7 @@ Surface Structure: The weather being nice, we went for a picnic in the park.
                       \VP
                            \(AdjP)
                                     \Adj --- nice
+```
 
 # Implications for translation
 

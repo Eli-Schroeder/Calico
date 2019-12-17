@@ -6,6 +6,7 @@ public class NPMeta extends Metadata{
 	public boolean isPronoun = false;
 	public boolean isPerson = false;
 	public boolean isProper = false;
+	public boolean isPlural = false;
 	public NPMeta pronounReference = null;
 	public boolean hasGender = false;
 	public boolean masculine = true;

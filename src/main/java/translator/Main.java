@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 
 import com.google.gson.Gson;
 
@@ -14,11 +15,19 @@ import translator.entospanish.EnToSpanishRules;
 
 public class Main {
 	
+	public static HashMap<String, String> apikeys = new HashMap<String, String>();
+	//The main translator program will put each api key in this map for your TRules to use.
+	//API keys so far:
+	//MWSpanish - Merriam-Webster English and Spanish reference
+	
 	//This main method is for testing purposes only. When you run the program, it will make a request to
 	//the server to parse a sentence into the English deep structure, and then it will run transformations
 	//and print the output tree and sentence.
 	public static void main(String[] args) {
-		String sentence = "the man who delivers the fever blister ointment is my friend";
+		
+		//Add API keys to "apikeys" here for testing, but remove them before committing!!!
+		
+		String sentence = "I read the book";
 		//Replace this with your test sentence.
 		Node n = null;
 		try {
@@ -49,34 +58,6 @@ public class Main {
 		n.printTree();
 		System.out.println();
 		n.print();
-	}
-	
-	public static MWref dictionary(String s) {
-		Gson gson = new Gson();
-		try {
-			return gson.fromJson(readUrl("https://www.dictionaryapi.com/api/v3/references/collegiate/json/" + s.toLowerCase() + "?key=c74ceee6-7937-47ef-9a30-27999b9a1450"), MWref.class);
-		}catch(Exception i) {
-			System.out.println("No dictionary data for \"" + s + "\"");
-			return null;
-		}
-	}
-	private static String readUrl(String urlString) {
-	    BufferedReader reader = null;
-	    try {
-	        URL url = new URL(urlString);
-	        reader = new BufferedReader(new InputStreamReader(url.openStream()));
-	        return readInputStream(reader);
-	    } catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		} finally {
-	        if (reader != null)
-				try {
-					reader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-	    }
 	}
 	private static String readInputStream(BufferedReader reader) {
 		StringBuffer buffer = new StringBuffer();

@@ -8,6 +8,7 @@ public class Node {
 	public String type = "T";
 	public Node parent = null;
 	public String value = null;
+	public Metadata meta = null;
 
 	public Node() {}
 	

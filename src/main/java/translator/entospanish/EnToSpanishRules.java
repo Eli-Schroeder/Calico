@@ -9,7 +9,10 @@ public class EnToSpanishRules {
 	//Keep in mind other rules that you might want yours to operate before or after.
 	//Do not change the order of other rules or modify other parts of this file.
 	public static TRule[] rules = new TRule[] {
-		new TAdjMove()
+		new TAdjMove(),
+		new TGustarLikeVerbs(),
+		new TPersonalA(),
+		new TSwapSubjectAndDirectObject()
 	};
 	
 	public static void transform(Node n) {

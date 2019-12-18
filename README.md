@@ -5,7 +5,7 @@ Let's work together to make translation better.
 Calico is my super ambitious attempt to beat Google translate. This repository does not contain the real guts of the program, but will instead be depended on by another program that passes in English Deep Structure trees. The purpose of this program is to transform the English deep structure trees into surface structure sentences of other languages.
 
 # Wait wait wait... deep structure? Trees?
-The deep structure is a language linguists came up with which is basically boiled-down language. It features every verbal unit as a clause (as opposed to absolute phrases, participial phrases, gerund phrases, and infinitive phrases), moves adverbial material, including adverb clauses, to behind the verb, and features no pronouns. These deep structure sentences can be diagrammed using a method refined by my good teacher Dr. Wink and his wife who recently passed away. Here's an example of a sentence converted to the deep structure and diagrammed as a tree diagram.
+The deep structure is a language linguists came up with which is basically boiled-down language. It features every verbal unit as a clause (as opposed to absolute phrases, participial phrases, gerund phrases, and infinitive phrases), moves adverbial material, including adverb clauses, to behind the verb, and features no pronouns (for our purposes, we keep the pronouns in most of the time). These deep structure sentences can be diagrammed using a method refined by my good teacher Dr. Wink and his wife who recently passed away. Here's an example of a sentence converted to the deep structure and diagrammed as a tree diagram.
 
 Surface Structure: The weather being nice, we went for a picnic in the park.
 

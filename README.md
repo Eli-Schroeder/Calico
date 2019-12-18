@@ -1,5 +1,5 @@
 # Calico
-The Wikipedia of automatic translation
+Let's work together to make translation better.
 
 # What is Calico?
 Calico is my super ambitious attempt to beat Google translate. This repository does not contain the real guts of the program, but will instead be depended on by another program that passes in English Deep Structure trees. The purpose of this program is to transform the English deep structure trees into surface structure sentences of other languages.

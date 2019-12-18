@@ -41,6 +41,8 @@ Surface Structure: The weather being nice, we went for a picnic in the park.
                                     \Adj --- nice
 ```
 
+You can go test it out on your own sentences at winkiangrammar.blogspot.com!
+
 # Implications for translation
 
 At first, I was convinced Spanish advanced grammar would look very different than English advanced grammar. But come to think of it, the primary differences are just syntax, and just as transformational rules can return the deep structure back to the English surface structure, perhaps the right T rules could return the deep structure to Spanish surface structure.

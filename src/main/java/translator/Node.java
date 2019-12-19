@@ -8,13 +8,19 @@ public class Node {
 	public String type = "T";
 	public Node parent = null;
 	public String value = null;
-	public Metadata meta = null;
+	public NPMeta meta = null;
+	public VPMeta vpmeta = null;
+	public boolean isTranslated = false;
 
 	public Node() {}
 	
-	//This constructor should only be used for terminal nodes.
+	//These constructors should only be used for terminal nodes.
 	public Node(String value) {
 		this.value = value;
+	}
+	public Node(String value, boolean translated) {
+		this.value = value;
+		isTranslated = translated;
 	}
 	//Prints the tree for debugging
 	public void printTree() {
@@ -44,6 +50,10 @@ public class Node {
 	}
 	@Override
 	public String toString() {
+		String type = this.type;
+		if(meta != null) {
+			type = "<" + type + ">";
+		}
 		if(children==null || children.isEmpty()) {
 			return type + " --- " + value;
 		}
@@ -98,6 +108,14 @@ public class Node {
 			n.parent = this;
 			n.setParents();
 		}
+	}
+	public Node getFirstChildOfType(String type) {
+		for(Node n : children) {
+			if(n.type.equals(type)) {
+				return n;
+			}
+		}
+		return null;
 	}
 	//Prints the node and its children as a sentence instead of a tree
 	public void print() {

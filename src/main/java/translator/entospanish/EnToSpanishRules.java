@@ -9,6 +9,8 @@ public class EnToSpanishRules {
 	//Keep in mind other rules that you might want yours to operate before or after.
 	//Do not change the order of other rules or modify other parts of this file.
 	public static TRule[] rules = new TRule[] {
+		new TMWWordTranslate("MWSpanish"),
+		new TArticles(),
 		new TAdjMove(),
 		new TGustarLikeVerbs(),
 		new TPersonalA(),
@@ -16,8 +18,12 @@ public class EnToSpanishRules {
 	};
 	
 	public static void transform(Node n) {
+		int i = 1;
 		for(TRule rule : rules) {
 			rule.transform(n);
+			System.out.print("T-Rule #" + i + " ");
+			n.print();
+			i++;
 		}
 	}
 }

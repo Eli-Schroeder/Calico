@@ -12,6 +12,9 @@ public class NPMeta extends Metadata{
 	public boolean masculine = true;
 	
 	public boolean hasGender() {
+		if(hasGender) {
+			return true;
+		}
 		if(isPronoun && pronounReference != null) {
 			return pronounReference.hasGender();
 		}
@@ -19,9 +22,12 @@ public class NPMeta extends Metadata{
 	}
 	
 	public boolean isMasculine() {
+		if(hasGender) {
+			return masculine;
+		}
 		if(isPronoun && pronounReference != null) {
 			return pronounReference.hasGender();
 		}
-		return hasGender;
+		return masculine;
 	}
 }

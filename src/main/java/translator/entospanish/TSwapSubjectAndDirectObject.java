@@ -1,8 +1,9 @@
 package translator.entospanish;
 
+import java.util.LinkedList;
+
 import translator.Node;
 import translator.TRule;
-import translator.VPMeta;
 
 public class TSwapSubjectAndDirectObject extends TRule{
 	
@@ -14,22 +15,33 @@ public class TSwapSubjectAndDirectObject extends TRule{
 	@Override
 	public void transform(Node root) {
 		//Find all clauses
-		for(Node s : root.getDescendantsOfType("S")) {
+		LinkedList<Node> clauses = root.getDescendantsOfType("S");
+		clauses.add(0,root);
+		for(Node s : clauses) {
 			Node subject = s.children.get(0);
 			Node vp = s.children.get(1);
 			//continue if the verb is not gustar-like
-			if(vp.meta == null || !((VPMeta)vp.meta).isGustarLike) {
+			if(vp.vpmeta == null || !vp.vpmeta.isGustarLike) {
 				continue;
 			}
 			//ye ole switcharoo
-			Node directobject = vp.children.get(1);
+			for(int i=0;i<vp.children.size();i++) {
+				Node DO = vp.children.get(i);
+				if(DO.type.equals("NP")) {
+					vp.children.remove(i);
+					s.children.add(0,DO);
+					DO.parent = s;
+					break;
+				}
+			}
 			subject.delete();
-			directobject.delete();
-			s.children.add(0,directobject);
-			directobject.parent = s;
-			vp.children.add(1,subject);
+			for(int i=0;i<vp.children.size();i++) {
+				if(vp.children.get(i).type.equals("V")) {
+					vp.children.add(i+1,subject);
+					break;
+				}
+			}
 			subject.parent = vp;
 		}
 	}
-
 }

@@ -109,13 +109,13 @@ public class Node {
 			n.setParents();
 		}
 	}
-	public Node getFirstChildOfType(String type) {
-		for(Node n : children) {
-			if(n.type.equals(type)) {
-				return n;
+	public int getFirstChildOfType(String type) {
+		for(int i=0;i<children.size();i++) {
+			if(children.get(i).type.equals(type)) {
+				return i;
 			}
 		}
-		return null;
+		return -1;
 	}
 	//Prints the node and its children as a sentence instead of a tree
 	public void print() {

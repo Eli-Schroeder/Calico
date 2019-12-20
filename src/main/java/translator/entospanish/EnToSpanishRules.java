@@ -12,6 +12,8 @@ public class EnToSpanishRules {
 		new TMWWordTranslate("MWSpanish"),
 		new TArticles(),
 		new TAdjMove(),
+		new TPossessive(),
+		new TCoordinatingConjunction(),
 		new TGustarLikeVerbs(),
 		new TPersonalA(),
 		new TSwapSubjectAndDirectObject()

@@ -29,11 +29,6 @@ public class TGustarLikeVerbs extends TRule{
 		clauses.add(0,root);
 		for(Node s : clauses) {
 			Node vp = s.children.get(1);
-			//Continue if the verb is not "gustar like"
-			/*if(vp.meta == null || !((VPMeta)vp.meta).isGustarLike) {
-				continue;
-			}*/
-			//^Commented out while that metadata doesn't exist
 			Node np = null;
 			//Look for an adverbial preposition
 			for(Node advp : vp.getDescendantsOfType("AdvP", 1)) {

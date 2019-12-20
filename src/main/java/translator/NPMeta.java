@@ -10,6 +10,7 @@ public class NPMeta extends Metadata{
 	public NPMeta pronounReference = null;
 	public boolean hasGender = false;
 	public boolean masculine = true;
+	public boolean possessive = false;
 	
 	public boolean hasGender() {
 		if(hasGender) {

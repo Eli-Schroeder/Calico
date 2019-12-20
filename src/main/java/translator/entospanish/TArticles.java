@@ -12,45 +12,48 @@ public class TArticles extends TRule{
 	@Override
 	public void transform(Node root) {
 		for(Node n : root.getDescendantsOfType("NP")) {
-			Node N = n.getFirstChildOfType("N");
-			if(N == null) {
+			int N = n.getFirstChildOfType("N");
+			if(N == -1) {
 				continue;
 			}
-			Node det = n.getFirstChildOfType("Det");
-			if(det == null) {
+			Node noun = n.children.get(N);
+			int det = n.getFirstChildOfType("Det");
+			if(det == -1) {
 				continue;
 			}
-			Node art = det.getFirstChildOfType("Art");
-			if(art == null) {
+			Node Det = n.children.get(det);
+			int art = Det.getFirstChildOfType("Art");
+			if(art == -1) {
 				continue;
 			}
+			Node Art = Det.children.get(art);
 			String[] s = null;
-			if(art.value.equals("the")) {
+			if(Art.value.equals("the")) {
 				s = the;
 			}
-			if(art.value.equals("a")) {
+			if(Art.value.equals("a")) {
 				s = a;
 			}
 			if(s != null) {
-				NPMeta meta = N.meta;
+				NPMeta meta = noun.meta;
 				if(meta==null){
 					meta = new NPMeta();
-					N.meta = meta;
+					noun.meta = meta;
 				}
 				if(meta.isMasculine()) {
 					if(meta.isPlural) {
-						art.value = s[3];
+						Art.value = s[3];
 					}else {
-						art.value = s[0];
+						Art.value = s[0];
 					}
 				}else {
 					if(meta.isPlural) {
-						art.value = s[2];
+						Art.value = s[2];
 					}else {
-						art.value = s[1];
+						Art.value = s[1];
 					}
 				}
-				N.isTranslated = true;
+				Art.isTranslated = true;
 			}
 		}
 	}

@@ -14,4 +14,30 @@ public class VPMeta extends Metadata{
 	public String perf = null;
 	public String prog = null;
 	public Word dictionary = null;
+	
+	@Override
+	public String toString() {
+		return "?meta=" + form + "," + tense + "," + isGustarLike + "," + isReflexive + "," + mod + "," + perf + "," + prog;
+	}
+	
+	public static VPMeta fromString(String s) {
+		VPMeta meta = new VPMeta();
+		String[] m = s.substring(s.indexOf("?meta=")+5).split(",");
+		for(int i=0;i<m.length;i++) {
+			String str = m[i];
+			if(str.equals("null")) {
+				str = null;
+			}
+			switch(i) {
+			case 0:meta.form = Integer.parseInt(str);break;
+			case 1:meta.tense = Integer.parseInt(str);break;
+			case 2:meta.isGustarLike = str.equals("true");break;
+			case 3:meta.isReflexive = str.equals("true");break;
+			case 4:meta.mod = str;
+			case 5:meta.perf = str;
+			case 6:meta.prog = str;
+			}
+		}
+		return meta;
+	}
 }

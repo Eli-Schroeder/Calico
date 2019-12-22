@@ -22,7 +22,7 @@ public class VPMeta extends Metadata{
 	
 	public static VPMeta fromString(String s) {
 		VPMeta meta = new VPMeta();
-		String[] m = s.substring(s.indexOf("?meta=")+5).split(",");
+		String[] m = s.substring(s.indexOf("?meta=")+6).split(",");
 		for(int i=0;i<m.length;i++) {
 			String str = m[i];
 			if(str.equals("null")) {

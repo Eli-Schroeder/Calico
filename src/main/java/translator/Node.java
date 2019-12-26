@@ -12,13 +12,17 @@ public class Node {
 	public VPMeta vpmeta = null;
 	public boolean isTranslated = false;
 
-	public Node() {}
+	public Node(Node parent) {
+		this.parent = parent;
+	}
 	
 	//These constructors should only be used for terminal nodes.
-	public Node(String value) {
+	public Node(Node parent, String value) {
+		this.parent = parent;
 		this.value = value;
 	}
-	public Node(String value, boolean translated) {
+	public Node(Node parent, String value, boolean translated) {
+		this.parent = parent;
 		this.value = value;
 		isTranslated = translated;
 	}
@@ -51,11 +55,26 @@ public class Node {
 	@Override
 	public String toString() {
 		String type = this.type;
-		if(meta != null) {
+		if(meta != null || vpmeta != null) {
 			type = "<" + type + ">";
 		}
 		if(children==null || children.isEmpty()) {
-			return type + " --- " + value;
+			String meta = "";
+			if(vpmeta != null && !isTranslated) {
+				if(vpmeta.mod != null) {
+					meta += vpmeta.mod + " ";
+				}
+				if(vpmeta.perf != null) {
+					meta += vpmeta.perf + " ";
+				}
+				if(vpmeta.prog != null) {
+					meta += vpmeta.prog + " ";
+				}
+				if(meta.length() > 0) {
+					meta = "(" + meta.substring(0,meta.length()-1) + ") ";
+				}
+			}
+			return type + " --- " + meta + value;
 		}
 		return type;
 	}
@@ -123,6 +142,17 @@ public class Node {
 	}
 	private void print(boolean root) {
 		if(value != null) {
+			if(vpmeta != null && !isTranslated) {
+				if(vpmeta.mod != null) {
+					System.out.print(vpmeta.mod + " ");
+				}
+				if(vpmeta.perf != null) {
+					System.out.print(vpmeta.perf + " ");
+				}
+				if(vpmeta.prog != null) {
+					System.out.print(vpmeta.prog + " ");
+				}
+			}
 			System.out.print(value + " ");
 		}else {
 			for(Node n : children) {
@@ -132,5 +162,31 @@ public class Node {
 		if(root) {
 			System.out.println();
 		}
+	}
+	//Finds the next word in the sentence.
+	public Node nextTerminalNode() {
+		Node n = this;
+		while(true) {
+			if(n.parent==null) {
+				return null;
+			}
+			int index = -1;
+			for(int i=0;i<n.parent.children.size();i++) {
+				if(n.parent.children.get(i) == this) {
+					index = i;
+					break;
+				}
+			}
+			if(index+1<n.parent.children.size()) {
+				n = n.parent.children.get(index+1);
+				break;
+			}else {
+				n = n.parent;
+			}
+		}
+		while(n.children != null && !n.children.isEmpty()) {
+			n = n.children.get(0);
+		}
+		return n;
 	}
 }

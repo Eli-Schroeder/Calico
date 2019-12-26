@@ -9,14 +9,17 @@ public class EnToSpanishRules {
 	//Keep in mind other rules that you might want yours to operate before or after.
 	//Do not change the order of other rules or modify other parts of this file.
 	public static TRule[] rules = new TRule[] {
+		new TLikeToGustar(),
 		new TMWWordTranslate("MWSpanish"),
 		new TArticles(),
 		new TAdjMove(),
 		new TPossessive(),
-		new TCoordinatingConjunction(),
-		new TGustarLikeVerbs(),
+		new TSubordinatingConjunction(),
+		new TReflexiveVerbs(),
+		new TGustarVerbs(),
 		new TPersonalA(),
-		new TSwapSubjectAndDirectObject()
+		new TSwapSubjectAndDirectObject(),
+		new TAl()
 	};
 	
 	public static void transform(Node n) {

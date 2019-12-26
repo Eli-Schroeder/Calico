@@ -35,7 +35,7 @@ public class TAdjMove extends TRule{
 				adjp.delete();
 				np.children.add(index,adjp);
 				if(adjp.hasChildOfType("NP", false)) {
-					np.children.add(index,new Node("de",true));
+					np.children.add(index,new Node(np,"de",true));
 				}
 			}
 		}

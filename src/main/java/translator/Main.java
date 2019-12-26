@@ -27,7 +27,7 @@ public class Main {
 		
 		//Add API keys to "apikeys" here for testing, but remove them before committing!!!
 		
-		String sentence = "it is nice that the cat ran";
+		String sentence = "i forgot to fix it";
 		//Replace this with your test sentence.
 		Node n = null;
 		try {

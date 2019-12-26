@@ -3,7 +3,7 @@ package translator.entospanish;
 import translator.Node;
 import translator.TRule;
 
-public class TCoordinatingConjunction extends TRule{
+public class TSubordinatingConjunction extends TRule{
 	
 	/*
 	 * In sentences with noun clauses, this rule adds "que" before them. Also
@@ -20,7 +20,7 @@ public class TCoordinatingConjunction extends TRule{
 		//Find complement conjunctions
 		for(Node compp : root.getDescendantsOfType("CompP")) {
 			//Insert "que"
-			compp.children.add(0, new Node("que",true));
+			compp.children.add(0, new Node(compp,"que",true));
 			Node np = compp.parent;
 			int index = -1;
 			//Continue if the parent is not a clause

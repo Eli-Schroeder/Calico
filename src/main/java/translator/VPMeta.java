@@ -13,7 +13,10 @@ public class VPMeta extends Metadata{
 	public String mod = null;
 	public String perf = null;
 	public String prog = null;
+	public String infinitive = null;
 	public Word dictionary = null;
+	public String doToPrep = null;
+	public boolean conjugated = false;
 	
 	@Override
 	public String toString() {

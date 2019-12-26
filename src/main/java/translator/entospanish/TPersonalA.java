@@ -26,7 +26,7 @@ public class TPersonalA extends TRule{
 				}
 				//Insert "a" before any personal direct object
 				if(c.type.equals("NP") && meta != null && (meta.isPerson || meta.isPronoun)) {
-					c.children.add(0,new Node("a",true));
+					c.children.add(0,new Node(c,"a",true));
 					break;
 				}
 			}

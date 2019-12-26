@@ -39,7 +39,7 @@ public class TPossessive extends TRule{
 					}
 				}
 				//Insert "de" and the possessive object after the noun
-				np.children.add(index+1,new Node("de",true));
+				np.children.add(index+1,new Node(np,"de",true));
 				np.children.add(index+2,poss);
 			}
 		}

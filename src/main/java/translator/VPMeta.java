@@ -17,6 +17,7 @@ public class VPMeta extends Metadata{
 	public Word dictionary = null;
 	public String doToPrep = null;
 	public boolean conjugated = false;
+	public boolean isFinite = true;
 	
 	@Override
 	public String toString() {

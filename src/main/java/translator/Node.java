@@ -125,7 +125,7 @@ public class Node {
 		}
 		return false;
 	}
-	protected void setParents() {
+	public void setParents() {
 		for(Node n : children) {
 			n.parent = this;
 			n.setParents();

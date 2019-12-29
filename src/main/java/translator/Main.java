@@ -27,7 +27,7 @@ public class Main {
 		
 		//Add API keys to "apikeys" here for testing, but remove them before committing!!!
 		
-		String sentence = "i forgot to fix it";
+		String sentence = "i have a cat";
 		//Replace this with your test sentence.
 		Node n = null;
 		try {
@@ -51,13 +51,20 @@ public class Main {
 		System.out.println("Here's the tree before transformations...");
 		n.printTree();
 		System.out.println();
-		n.print();
+		System.out.println(n.toSentence());
 		System.out.println();
 		System.out.println("And here's after!");
-		EnToSpanishRules.transform(n);
+		EnToSpanishRules rules = new EnToSpanishRules();
+		rules.transform(n);
 		n.printTree();
 		System.out.println();
-		n.print();
+		System.out.println(n.toSentence());
+		for(Prompt p : rules.userPrompts) {
+			System.out.println(p.prompt);
+			for(String[] s : p.alts) {
+				System.out.println("-" + s[0] + " : " + s[1]);
+			}
+		}
 	}
 	private static String readInputStream(BufferedReader reader) {
 		StringBuffer buffer = new StringBuffer();

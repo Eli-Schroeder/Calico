@@ -73,6 +73,9 @@ public class Node {
 				if(meta.length() > 0) {
 					meta = "(" + meta.substring(0,meta.length()-1) + ") ";
 				}
+				if(vpmeta.isFinite) {
+					meta += "(FINITE) ";
+				}
 			}
 			return type + " --- " + meta + value;
 		}
@@ -186,6 +189,106 @@ public class Node {
 		}
 		while(n.children != null && !n.children.isEmpty()) {
 			n = n.children.get(0);
+		}
+		return n;
+	}
+	
+	public Node clone() {
+		Node cloneRoot = clone(null);
+		return cloneRoot;
+	}
+	private Node clone(Node parent) {
+		Node out = new Node(parent);
+		out.value = value;
+		out.isTranslated = isTranslated;
+		out.type = type;
+		if(meta != null) {
+			out.meta = meta.clone();
+		}
+		if(vpmeta != null) {
+			out.vpmeta = vpmeta.clone();
+		}
+		for(Node c : children) {
+			out.children.add(c.clone(out));
+		}
+		return out;
+	}
+	
+	public Node getRoot() {
+		Node n = this;
+		while(n.parent != null) {
+			n = n.parent;
+		}
+		return n;
+	}
+	
+	public Node getNodeFromIdenticalTree(Node otherTreeRoot, Node descendant) {
+		LinkedList<Integer> index = new LinkedList<Integer>();
+		Node n = descendant;
+		while(n!=this) {
+			int i = 0;
+			for(;i<n.parent.children.size();i++) {
+				if(n.parent.children.get(i)==n) {
+					break;
+				}
+			}
+			index.add(0,i);
+			n = n.parent;
+		}
+		Node out = otherTreeRoot;
+		while(!index.isEmpty()) {
+			int i = index.removeFirst();
+			out = out.children.get(i);
+		}
+		return out;
+	}
+	public String toSentence() {
+		return toSentence(true);
+	}
+	private String toSentence(boolean root) {
+		StringBuilder sb = new StringBuilder();
+		if(value != null) {
+			if(vpmeta != null && !isTranslated) {
+				if(vpmeta.mod != null) {
+					sb.append(vpmeta.mod + " ");
+				}
+				if(vpmeta.perf != null) {
+					sb.append(vpmeta.perf + " ");
+				}
+				if(vpmeta.prog != null) {
+					sb.append(vpmeta.prog + " ");
+				}
+			}
+			sb.append(value + " ");
+		}else {
+			for(Node n : children) {
+				sb.append(n.toSentence(false));
+			}
+		}
+		return sb.toString();
+	}
+	
+	//Returns a list of indices that will get from the root to this node.
+	public Integer[] indexMap() {
+		LinkedList<Integer> index = new LinkedList<Integer>();
+		Node n = this;
+		while(n.parent != null) {
+			int i=0;
+			for(;i<n.parent.children.size();i++) {
+				if(n.parent.children.get(i)==n) {
+					break;
+				}
+			}
+			index.add(0,i);
+			n = n.parent;
+		}
+		return index.toArray(new Integer[index.size()]);
+	}
+	
+	public Node getDescendantFromIndex(Integer[] index) {
+		Node n = this;
+		for(int i=0;i<index.length;i++) {
+			n = n.children.get(index[i]);
 		}
 		return n;
 	}

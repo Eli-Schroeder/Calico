@@ -14,6 +14,9 @@ public class TLikeToGustar extends TRule{
 	@Override
 	public void transform(Node root) {
 		for(Node v : root.getDescendantsOfType("V")) {
+			if(!v.vpmeta.isFinite) {
+				continue;
+			}
 			Node vp = v.parent;
 			Node s = vp.parent;
 			Node np = s.children.get(s.getFirstChildOfType("NP"));

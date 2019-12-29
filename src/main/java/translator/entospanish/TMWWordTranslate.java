@@ -4,12 +4,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.LinkedList;
 
 import com.google.gson.Gson;
 
 import translator.Main;
 import translator.NPMeta;
 import translator.Node;
+import translator.Prompt;
 import translator.TRule;
 import translator.VPMeta;
 
@@ -78,134 +80,54 @@ public class TMWWordTranslate extends TRule{
 						//The Winkian grammar parser should already write some metadata about auxiliary verbs
 						//if any are present.
 						if(word != null) {
-							if(word.shortdef[0].contains(" : ")) {
-								word.shortdef[0] = word.shortdef[0].substring(word.shortdef[0].indexOf(" : ")+3);
+							LinkedList<String[]> alts = new LinkedList<String[]>();
+							LinkedList<VPMeta> vpmetas = new LinkedList<VPMeta>();
+							LinkedList<NPMeta> npmetas = new LinkedList<NPMeta>();
+							for(int i=word.shortdef.length-1;i>=0;i--) {
+								String syn = "None";
+								if(word.shortdef[i].contains(" : ")) {
+									syn = word.shortdef[i].substring(0, word.shortdef[i].indexOf(" : "));
+									word.shortdef[i] = word.shortdef[i].substring(word.shortdef[i].indexOf(" : ")+3);
+								}else if(i != 0) {
+									continue;
+								}
+								if(word.shortdef[i].contains(",")) {
+									word.shortdef[i] = word.shortdef[i].substring(i,word.shortdef[i].indexOf(","));
+								}
+								if(c.vpmeta == null) {
+									c.vpmeta = new VPMeta();
+								}
+								String[] split = word.shortdef[i].split(" ");
+								if(split.length > 1) {
+									c.vpmeta.doToPrep = word.shortdef[i].substring(word.shortdef[i].indexOf(" ")+1);
+								}
+								word.shortdef[i] = split[0];
+								if(word.shortdef[i].endsWith("se")) {
+									c.vpmeta.isReflexive = true;
+									word.shortdef[i] = word.shortdef[i].substring(0, word.shortdef[i].length()-2);
+								}
+								c.value = word.shortdef[i];
+								verb(c,apikey,word);
+								c.isTranslated = true;
+								//if(i!=0) {
+									alts.add(new String[] {syn,c.value});
+									vpmetas.add(c.vpmeta);
+									npmetas.add(c.meta);
+								//}
 							}
-							if(word.shortdef[0].contains(",")) {
-								word.shortdef[0] = word.shortdef[0].substring(0,word.shortdef[0].indexOf(","));
-							}
-							if(c.vpmeta == null) {
-								c.vpmeta = new VPMeta();
-							}
-							String[] split = word.shortdef[0].split(" ");
-							if(split.length > 1) {
-								c.vpmeta.doToPrep = word.shortdef[0].substring(word.shortdef[0].indexOf(" ")+1);
-							}
-							word.shortdef[0] = split[0];
-							if(word.shortdef[0].endsWith("se")) {
-								c.vpmeta.isReflexive = true;
-								word.shortdef[0] = word.shortdef[0].substring(0, word.shortdef[0].length()-2);
-							}
-							c.value = word.shortdef[0];
-							c.isTranslated = true;
+							Prompt p = new Prompt();
+							p.prompt = "Which word would be synonymous with \"" + s + "\" in this context?";
+							p.alts = alts.toArray(new String[alts.size()][]);
+							p.applyVPMeta = vpmetas.toArray(new VPMeta[vpmetas.size()]);
+							p.applyNPMeta = npmetas.toArray(new NPMeta[npmetas.size()]);
+							p.rule = this.index+1;
+							p.node = c.indexMap();
+							p.root = root;
+							esinstance.userPrompts.add(p);
 						}
-						if(c.type.equals("V")) {
-							Word[] enverb;
-							if(word != null) {
-								writeVPMeta(word,c,apikey);
-								enverb = dictionary(c.value,apikey);
-								c.vpmeta.infinitive = c.value;
-							}else {
-								enverb = dictionary("gustar",apikey);
-								c.vpmeta.infinitive = "gustar";
-							}
-							String chart = "pind";
-							String suffix = "";
-							if(c.vpmeta.prog != null) {
-								//If the verb is progressive (meaning the auxiliary "be" is present),
-								//make the main verb "estar" and append the progressive version of the verb
-								//to the end.
-								if(c.vpmeta.mod != null) {
-									suffix = " " + enverb[0].suppl.getConjChart("gppt")[0];
-								}else {
-									suffix = " " + enverb[0].suppl.getConjChart("gppt")[0];
-								}
-								enverb = dictionary("estar",apikey);
-							}
-							if(c.vpmeta.mod != null) {
-								if(c.vpmeta.mod.equals("will")) {
-									chart = "futr";
-									if(c.vpmeta.perf != null) {
-										chart = "fpin";
-									}
-								}
-								if(c.vpmeta.mod.equals("would") || c.vpmeta.mod.equals("may") || c.vpmeta.mod.equals("might") || c.vpmeta.mod.equals("must") || c.vpmeta.mod.equals("could")) {
-									if(c.vpmeta.perf != null) {
-										chart = "cpef";
-										if(c.vpmeta.prog != null) {
-											chart = "ppss1";
-										}
-									}else {
-										chart = "cond";
-									}
-									if(c.vpmeta.mod.equals("could")) {
-										if(c.vpmeta.perf != null && c.vpmeta.prog == null) {
-											chart = "pprf";
-											suffix = " haber " + enverb[0].suppl.getConjChart("gppt")[1];
-										}
-										if(c.vpmeta.perf == null && c.vpmeta.prog != null) {
-											chart = "cond";
-											suffix = " estar" + suffix;
-										}
-										if(c.vpmeta.perf != null && c.vpmeta.prog != null) {
-											chart = "cond";
-											suffix = " haber estado" + suffix;
-										}
-										enverb = dictionary("poder",apikey);
-									}
-									if(c.vpmeta.mod.equals("must")) {
-										chart = "pind";
-										if(c.vpmeta.perf != null && c.vpmeta.prog == null) {
-											suffix = " haber " + enverb[0].suppl.getConjChart("gppt")[1];
-											enverb = dictionary("deber",apikey);
-										}
-										if(c.vpmeta.perf == null && c.vpmeta.prog != null) {
-											suffix = " estar" + suffix;
-											enverb = dictionary("deber",apikey);
-										}
-										if(c.vpmeta.perf != null && c.vpmeta.prog != null) {
-											suffix = " haber estado" + suffix;
-											enverb = dictionary("deber",apikey);
-										}
-									}
-								}
-							}else {
-								if(c.vpmeta.tense==VPMeta.PAST) {
-									chart = "pprf";
-									if(c.vpmeta.perf != null) {
-										chart = "ppfs";
-									}
-								}
-								if(c.vpmeta.tense==VPMeta.PRESENT && c.vpmeta.perf != null) {
-									chart = "ppci";
-								}
-							}
-							//Find the subject of the clause to determine which of the conjugations to use
-							Node np = c.parent.parent.children.get(c.parent.parent.getFirstChildOfType("NP"));
-							int index = np.getFirstChildOfType("N");
-							int con = 2;
-							if(index!=-1) {
-								Node n = np.children.get(index);
-								//TODO: When the S. Winkian grammar parser is updated to support coordinating
-								//conjunctions, look for NPs containing "I" plus others to conjugate as "we",
-								//or multiple others to conjugate as "they"
-								if(n.value.equals("we") || n.value.equals("nosotros")) {
-									con = 3;
-								}
-								if(n.value.equals("they") || n.value.equals("them") || n.value.equals("ellos") || n.value.equals("ellas")) {
-									con = 4;
-								}
-								if(n.value.equals("i") || n.value.equals("SP") || n.value.equals("me") || n.value.equals("yo")) {
-									con = 0;
-								}
-								if(n.value.equals("you") || n.value.equals("HR") || n.value.equals("tu")) {
-									con = 1;
-								}
-							}
-							c.value = enverb[0].suppl.getConjChart(chart)[con] + suffix;
-							c.vpmeta.conjugated = true;
-							c.isTranslated = true;
-						}
+						/*if(!c.isTranslated) {
+							verb(c, apikey, word);
+						}*/
 						if(c.type.equals("N")) {
 							//If the word is a noun, write NPMeta for characteristics like number and gender.
 							NPMeta meta = c.meta;
@@ -226,6 +148,136 @@ public class TMWWordTranslate extends TRule{
 					}
 				}
 			}
+		}
+	}
+	
+	private static void verb(Node c, String apikey, Word word) {
+		if(c.type.equals("V")) {
+			Word[] enverb;
+			if(word != null) {
+				writeVPMeta(word,c,apikey);
+				enverb = dictionary(c.value,apikey);
+				c.vpmeta.infinitive = c.value;
+			}else {
+				enverb = dictionary("gustar",apikey);
+				c.vpmeta.infinitive = "gustar";
+			}
+			String chart = "pind";
+			String suffix = "";
+			if(c.vpmeta.prog != null) {
+				//If the verb is progressive (meaning the auxiliary "be" is present),
+				//make the main verb "estar" and append the progressive version of the verb
+				//to the end.
+				if(c.vpmeta.mod != null) {
+					suffix = " " + enverb[0].suppl.getConjChart("gppt")[0];
+				}else {
+					suffix = " " + enverb[0].suppl.getConjChart("gppt")[0];
+				}
+				enverb = dictionary("estar",apikey);
+			}
+			if(c.vpmeta.mod != null) {
+				if(c.vpmeta.mod.equals("will")) {
+					chart = "futr";
+					if(c.vpmeta.perf != null) {
+						chart = "fpin";
+					}
+				}
+				if(c.vpmeta.mod.equals("would") || c.vpmeta.mod.equals("may") || c.vpmeta.mod.equals("might") || c.vpmeta.mod.equals("must") || c.vpmeta.mod.equals("could")) {
+					if(c.vpmeta.perf != null) {
+						chart = "cpef";
+						if(c.vpmeta.prog != null) {
+							chart = "ppss1";
+						}
+					}else {
+						chart = "cond";
+					}
+					if(c.vpmeta.mod.equals("could")) {
+						if(c.vpmeta.perf != null && c.vpmeta.prog == null) {
+							chart = "pprf";
+							suffix = " haber " + enverb[0].suppl.getConjChart("gppt")[1];
+						}
+						if(c.vpmeta.perf == null && c.vpmeta.prog != null) {
+							chart = "cond";
+							suffix = " estar" + suffix;
+						}
+						if(c.vpmeta.perf != null && c.vpmeta.prog != null) {
+							chart = "cond";
+							suffix = " haber estado" + suffix;
+						}
+						enverb = dictionary("poder",apikey);
+					}
+					if(c.vpmeta.mod.equals("must")) {
+						chart = "pind";
+						if(c.vpmeta.perf != null && c.vpmeta.prog == null) {
+							suffix = " haber " + enverb[0].suppl.getConjChart("gppt")[1];
+							enverb = dictionary("deber",apikey);
+						}
+						if(c.vpmeta.perf == null && c.vpmeta.prog != null) {
+							suffix = " estar" + suffix;
+							enverb = dictionary("deber",apikey);
+						}
+						if(c.vpmeta.perf != null && c.vpmeta.prog != null) {
+							suffix = " haber estado" + suffix;
+							enverb = dictionary("deber",apikey);
+						}
+					}
+				}
+			}else {
+				if(c.vpmeta.tense==VPMeta.PAST) {
+					chart = "pprf";
+					if(c.vpmeta.perf != null) {
+						chart = "ppfs";
+					}
+				}
+				if((c.vpmeta.tense==VPMeta.PRESENT || c.vpmeta.tense==VPMeta.BASE) && c.vpmeta.perf != null) {
+					chart = "ppci";
+				}
+			}
+			if(!c.vpmeta.isFinite) {
+				c.isTranslated = true;
+				c.value = enverb[0].headword + suffix;
+				c.vpmeta.conjugated = false;
+				int npindex = c.parent.parent.getFirstChildOfType("NP");
+				if(npindex==-1) {
+					return;
+				}
+				Node np = c.parent.parent.children.get(npindex);
+				int index = np.getFirstChildOfType("N");
+				if(index!=-1) {
+					Node n = np.children.get(index);
+					if(n.value.equals("SME")) {
+						np.delete();
+					}else {
+						np.children.add(index,new Node(np,"para",true));
+					}
+				}
+				return;
+			}
+			//Find the subject of the clause to determine which of the conjugations to use
+			Node np = c.parent.parent.children.get(c.parent.parent.getFirstChildOfType("NP"));
+			int index = np.getFirstChildOfType("N");
+			int con = 2;
+			if(index!=-1) {
+				Node n = np.children.get(index);
+				//TODO: When the S. Winkian grammar parser is updated to support coordinating
+				//conjunctions, look for NPs containing "I" plus others to conjugate as "we",
+				//or multiple others to conjugate as "they"
+				if(n.value.equals("we") || n.value.equals("nosotros")) {
+					con = 3;
+				}
+				if(n.value.equals("they") || n.value.equals("them") || n.value.equals("ellos") || n.value.equals("ellas")) {
+					con = 4;
+				}
+				if(n.value.equals("i") || n.value.equals("SP") || n.value.equals("me") || n.value.equals("yo")) {
+					con = 0;
+				}
+				if(n.value.equals("you") || n.value.equals("HR") || n.value.equals("tu")) {
+					con = 1;
+				}
+			}
+			c.value = enverb[0].suppl.getConjChart(chart)[con] + suffix;
+			c.vpmeta.conjugated = true;
+			c.isTranslated = true;
 		}
 	}
 	
@@ -291,12 +343,16 @@ public class TMWWordTranslate extends TRule{
 	}
 	//Looks up a single word in the dictionary
 	public static Word[] dictionary(String s, String apikey) {
+		if(s.equals("SME")) {
+			return null;
+		}
 		Gson gson = new Gson();
 		try {
 			String json = readUrl("https://dictionaryapi.com/api/v3/references/spanish/json/" + s + "?key=" + apikey);
 			Word[] words = gson.fromJson(json, Word[].class);
 			for(int i=0;i<words.length;i++) {
 				Word word = words[i];
+				word.headword = s;
 				for(int n=0;n<word.shortdef.length;n++) {
 					if(word.shortdef[n].indexOf(",")!=-1) {
 						word.shortdef[n] = word.shortdef[n].substring(0, word.shortdef[n].indexOf(","));
@@ -403,6 +459,7 @@ public class TMWWordTranslate extends TRule{
 	
 	//classes for GSon to put dictionary data into
 	public class Word {
+		public String headword;
 		public Meta meta;
 		public String fl;
 		public String[] shortdef;

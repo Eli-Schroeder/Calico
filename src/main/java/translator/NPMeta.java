@@ -12,6 +12,20 @@ public class NPMeta extends Metadata{
 	public boolean masculine = true;
 	public boolean possessive = false;
 	
+	public NPMeta clone() {
+		NPMeta out = new NPMeta();
+		out.instance = instance;
+		out.isPronoun = isPronoun;
+		out.isPerson = isPerson;
+		out.isProper = isProper;
+		out.isPlural = isPlural;
+		out.pronounReference = pronounReference;
+		out.hasGender = hasGender;
+		out.masculine = masculine;
+		out.possessive = possessive;
+		return out;
+	}
+	
 	public boolean hasGender() {
 		if(hasGender) {
 			return true;

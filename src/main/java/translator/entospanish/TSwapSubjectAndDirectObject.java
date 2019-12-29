@@ -19,7 +19,7 @@ public class TSwapSubjectAndDirectObject extends TRule{
 		clauses.add(0,root);
 		for(Node s : clauses) {
 			Node subject = s.children.get(0);
-			Node vp = s.children.get(1);
+			Node vp = s.children.get(s.getFirstChildOfType("VP"));
 			//continue if the verb is not gustar-like
 			if(vp.vpmeta == null || !vp.vpmeta.isGustarLike) {
 				continue;

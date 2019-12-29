@@ -19,7 +19,7 @@ public class TReflexiveVerbs extends TRule{
 			if(index != -1) {
 				Node np = vp.children.get(index);
 				int nindex = np.getFirstChildOfType("N");
-				if(nindex != -1 && np.children.get(index).value.endsWith("self")) {
+				if(nindex != -1 && np.children.get(nindex).value.endsWith("self")) {
 					vp.vpmeta.isReflexive = true;
 					String s = np.children.get(index).value;
 					if(s.equals("myself")) {

@@ -1,8 +1,12 @@
 package translator;
 
+import translator.entospanish.EnToSpanishRules;
+
 public abstract class TRule {
 	
 	public String apikey = null;
+	public int index = -1;
+	public EnToSpanishRules esinstance = null;
 	//This api key is used to connect with online dictionaries if necessary. If your T-Rule needs a web api,
 	//you can add it in your constructor for testing. However, for security purposes, don't include it in your
 	//PR. Instead, it will be passed in by the dependent project.

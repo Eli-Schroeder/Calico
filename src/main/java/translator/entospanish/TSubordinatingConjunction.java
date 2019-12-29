@@ -19,8 +19,13 @@ public class TSubordinatingConjunction extends TRule{
 	public void transform(Node root) {
 		//Find complement conjunctions
 		for(Node compp : root.getDescendantsOfType("CompP")) {
+			Node s = compp.children.get(compp.getFirstChildOfType("S"));
+			Node vp = s.children.get(s.getFirstChildOfType("VP"));
+			Node v = vp.children.get(vp.getFirstChildOfType("V"));
 			//Insert "que"
-			compp.children.add(0, new Node(compp,"que",true));
+			if(v.vpmeta != null && v.vpmeta.isFinite) {
+				compp.children.add(0, new Node(compp,"que",true));
+			}
 			Node np = compp.parent;
 			int index = -1;
 			//Continue if the parent is not a clause

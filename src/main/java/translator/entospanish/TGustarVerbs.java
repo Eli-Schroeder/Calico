@@ -20,7 +20,7 @@ public class TGustarVerbs extends TRule{
 		LinkedList<Node> clauses = root.getDescendantsOfType("S");
 		clauses.add(0,root);
 		for(Node s : clauses) {
-			Node vp = s.children.get(1);
+			Node vp = s.children.get(s.getFirstChildOfType("VP"));
 			Node v = vp.children.get(vp.getFirstChildOfType("V"));
 			boolean operate = false;
 			for(String str : affectedVerbs) {

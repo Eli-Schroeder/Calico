@@ -19,29 +19,20 @@ public class VPMeta extends Metadata{
 	public boolean conjugated = false;
 	public boolean isFinite = true;
 	
-	@Override
-	public String toString() {
-		return "?meta=" + form + "," + tense + "," + isGustarLike + "," + isReflexive + "," + mod + "," + perf + "," + prog;
-	}
-	
-	public static VPMeta fromString(String s) {
-		VPMeta meta = new VPMeta();
-		String[] m = s.substring(s.indexOf("?meta=")+6).split(",");
-		for(int i=0;i<m.length;i++) {
-			String str = m[i];
-			if(str.equals("null")) {
-				str = null;
-			}
-			switch(i) {
-			case 0:meta.form = Integer.parseInt(str);break;
-			case 1:meta.tense = Integer.parseInt(str);break;
-			case 2:meta.isGustarLike = str.equals("true");break;
-			case 3:meta.isReflexive = str.equals("true");break;
-			case 4:meta.mod = str;
-			case 5:meta.perf = str;
-			case 6:meta.prog = str;
-			}
-		}
-		return meta;
+	public VPMeta clone() {
+		VPMeta out = new VPMeta();
+		out.form = form;
+		out.tense = tense;
+		out.isGustarLike = isGustarLike;
+		out.isReflexive = isReflexive;
+		out.mod = mod;
+		out.perf = perf;
+		out.prog = prog;
+		out.infinitive = infinitive;
+		out.dictionary = dictionary;
+		out.doToPrep = doToPrep;
+		out.conjugated = conjugated;
+		out.isFinite = isFinite;
+		return out;
 	}
 }

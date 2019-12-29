@@ -29,6 +29,10 @@ public class EnToSpanishRules {
 	};
 	
 	public void transform(Node n) {
+		transform(n,0);
+	}
+	
+	public void transform(Node n, int start) {
 		for(int i=0;i<rules.length;i++) {
 			rules[i].esinstance = this;
 			rules[i].index = i;

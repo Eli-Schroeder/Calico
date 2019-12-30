@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import translator.Node;
 import translator.Prompt;
 import translator.TRule;
+import translator.Tree;
 
 public class EnToSpanishRules {
 	
@@ -41,9 +42,8 @@ public class EnToSpanishRules {
 		for(TRule rule : rules) {
 			int prompts = userPrompts.size();
 			rule.transform(n);
-			Node clone = n.clone();
 			for(int x=prompts;x<userPrompts.size();x++) {
-				userPrompts.get(x).root = clone;
+				userPrompts.get(x).copy = new Tree(n);
 			}
 			System.out.print("T-Rule #" + i + " ");
 			n.print();

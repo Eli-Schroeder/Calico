@@ -9,4 +9,5 @@ public class Prompt {
 	public Integer[] node;
 	public int rule;
 	public Node root;
+	public Tree copy;
 }

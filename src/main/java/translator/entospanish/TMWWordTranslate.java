@@ -13,6 +13,7 @@ import translator.NPMeta;
 import translator.Node;
 import translator.Prompt;
 import translator.TRule;
+import translator.Tree;
 import translator.VPMeta;
 
 public class TMWWordTranslate extends TRule{
@@ -123,6 +124,7 @@ public class TMWWordTranslate extends TRule{
 							p.rule = this.index+1;
 							p.node = c.indexMap();
 							p.root = root;
+							p.copy = new Tree(root);
 							esinstance.userPrompts.add(p);
 						}
 						/*if(!c.isTranslated) {

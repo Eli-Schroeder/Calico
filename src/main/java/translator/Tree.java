@@ -9,6 +9,8 @@ public class Tree {
 	public VPMeta vpmeta = null;
 	public boolean isTranslated = false;
 	
+	public Tree() {}
+	
 	public Tree(Node n) {
 		type = n.type;
 		value = n.value;

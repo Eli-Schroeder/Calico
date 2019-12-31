@@ -38,8 +38,8 @@ public class EnToSpanishRules {
 			rules[i].esinstance = this;
 			rules[i].index = i;
 		}
-		int i = 1;
-		for(TRule rule : rules) {
+		for(int i=start;i<rules.length;i++) {
+			TRule rule = rules[i];
 			int prompts = userPrompts.size();
 			rule.transform(n);
 			for(int x=prompts;x<userPrompts.size();x++) {
@@ -47,7 +47,6 @@ public class EnToSpanishRules {
 			}
 			System.out.print("T-Rule #" + i + " ");
 			n.print();
-			i++;
 		}
 	}
 }
